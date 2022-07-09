@@ -184,7 +184,7 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      
+
       if (post.creator.toString() !== req.userId) {
         const error = new Error('Not authorized!');
         error.statusCode = 403;
@@ -195,8 +195,14 @@ exports.deletePost = (req, res, next) => {
       return Post.findByIdAndRemove(postId);
     })
     .then(result => {
-      console.log(result);
-      return res.status(200).json({
+      return User.findById(req.userId);
+    })
+    .then(user => {
+      user.posts.pull(postId);
+      return user.save();
+    })
+    .then(result => {
+      res.status(200).json({
         message: 'Deleted Post.'
       })
     })
