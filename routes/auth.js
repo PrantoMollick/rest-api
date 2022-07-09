@@ -28,4 +28,6 @@ router.put('/signup', [body('email').isEmail().withMessage('Please enter valid e
 
 ], authController.signup);
 
+router.post('/login', authController.login);
+
 module.exports = router;
